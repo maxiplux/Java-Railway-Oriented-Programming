@@ -1,6 +1,5 @@
 package app.quantun.rop.v3;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -11,7 +10,7 @@ public class RailwayHandler<T> {
     private final Throwable error;
 
     // List of steps to build the pipeline
-    private List<Function<T, RailwayHandler<T>>> steps = new LinkedList<>();
+    private final List<Function<T, RailwayHandler<T>>> steps = new LinkedList<>();
 
     // Private constructor for internal success/failure creation
     private RailwayHandler(T value, Throwable error) {
@@ -61,9 +60,9 @@ public class RailwayHandler<T> {
                 } catch (Throwable e) {
                     return failure(e);
                 }
-            } else {
-                return current; // Short-circuit on error
             }
+            return current; // Short-circuit on error
+
         }
         return current;
     }
@@ -77,9 +76,9 @@ public class RailwayHandler<T> {
             } catch (Throwable e) {
                 return RailwayHandler.failure(e);
             }
-        } else {
-            return RailwayHandler.failure(error);
         }
+        return RailwayHandler.failure(error);
+
     }
 
     // Function for mapping the type A to a different type B without affecting the railway flow
@@ -90,9 +89,9 @@ public class RailwayHandler<T> {
             } catch (Throwable e) {
                 return RailwayHandler.failure(e);
             }
-        } else {
-            return RailwayHandler.failure(error);
         }
+        return RailwayHandler.failure(error);
+
     }
 
 
